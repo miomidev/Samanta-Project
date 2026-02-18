@@ -1,0 +1,6 @@
+rdms = "PostgreSQL"
+host = "103.185.52.138"
+port = 1185
+username = "poliwindra"
+password = "x2519-_w6ZtV*>dPzKSC4XDn0-0u(#iH"
+database = "poliwindra"
