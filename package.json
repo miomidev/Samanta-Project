@@ -11,9 +11,11 @@
   "dependencies": {
     "framer-motion": "^12.34.2",
     "lucide-react": "^0.574.0",
+    "mongoose": "^8.23.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "sequelize": "^6.37.7",
     "sharp": "^0.34.5"
   },
   "devDependencies": {
