@@ -59,6 +59,7 @@ export class ProjectCollaboratorModel extends BaseModel<ProjectCollaborator> imp
       {
         sequelize,
         ...BaseModel.initOptions('ProjectCollaborator'),
+        tableName: 'project_collaborators',
         timestamps: false,
         indexes: [
           {
@@ -77,7 +78,7 @@ export class ProjectCollaboratorModel extends BaseModel<ProjectCollaborator> imp
 import mongoose, { Schema } from 'mongoose'
 import { IBaseDocument } from './base.model'
 
-export interface IProjectCollaboratorDocument extends IBaseDocument, Omit<ProjectCollaborator, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface IProjectCollaboratorDocument extends IBaseDocument, Omit<ProjectCollaborator, 'id' | 'createdAt' | 'updatedAt'> { }
 
 const projectCollaboratorMongooseSchema = new Schema<IProjectCollaboratorDocument>({
   projectId: {
@@ -111,6 +112,6 @@ projectCollaboratorMongooseSchema.index({ role: 1 })
 projectCollaboratorMongooseSchema.index({ joinedAt: -1 })
 
 export const ProjectCollaboratorMongooseModel = mongoose.models.ProjectCollaborator || mongoose.model<IProjectCollaboratorDocument>(
-  'ProjectCollaborator', 
+  'ProjectCollaborator',
   projectCollaboratorMongooseSchema
 )

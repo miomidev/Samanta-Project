@@ -81,6 +81,7 @@ export class AuditLogModel extends BaseModel<AuditLog> implements AuditLog {
       {
         sequelize,
         ...BaseModel.initOptions('AuditLog'),
+        tableName: 'audit_logs',
         indexes: [
           {
             fields: ['user_id']
@@ -105,7 +106,7 @@ import mongoose, { Schema } from 'mongoose'
 import { IBaseDocument, baseSchema } from './base.model'
 
 
-export interface IAuditLogDocument extends IBaseDocument, Omit<AuditLog, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface IAuditLogDocument extends IBaseDocument, Omit<AuditLog, 'id' | 'createdAt' | 'updatedAt'> { }
 
 const auditLogMongooseSchema = new Schema<IAuditLogDocument>({
   ...baseSchema,

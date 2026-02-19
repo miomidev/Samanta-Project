@@ -108,7 +108,7 @@ export class UserModel
       {
         sequelize,
         ...BaseModel.initOptions('User'),
-
+        tableName: 'users', // Explicitly set table name
         indexes: [
           {
             unique: true,
@@ -139,8 +139,8 @@ import { IBaseDocument, baseSchema } from './base.model'
 export interface IUserDocument
   extends IBaseDocument,
   Omit<User, 'id' | 'createdAt' | 'updatedAt'> {
-    password?: string; // Added password field interface
-  }
+  password?: string; // Added password field interface
+}
 
 const userMongooseSchema = new Schema<IUserDocument>(
   {

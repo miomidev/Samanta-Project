@@ -99,6 +99,7 @@ export class ProjectModel extends BaseModel<Project> implements Project {
       {
         sequelize,
         ...BaseModel.initOptions('Project'),
+        tableName: 'projects', // Explicitly set table name to match SQL Schema
         indexes: [
           {
             fields: ['user_id']
@@ -123,7 +124,7 @@ export class ProjectModel extends BaseModel<Project> implements Project {
 import mongoose, { Schema } from 'mongoose'
 import { IBaseDocument, baseSchema } from './base.model'
 
-export interface IProjectDocument extends IBaseDocument, Omit<Project, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface IProjectDocument extends IBaseDocument, Omit<Project, 'id' | 'createdAt' | 'updatedAt'> { }
 
 const projectMongooseSchema = new Schema<IProjectDocument>({
   ...baseSchema,

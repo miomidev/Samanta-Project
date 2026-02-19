@@ -85,6 +85,7 @@ export class NotificationModel
       {
         sequelize,
         ...BaseModel.initOptions('Notification'),
+        tableName: 'notifications',
         indexes: [
           { fields: ['user_id'] },
           { fields: ['is_read'] },

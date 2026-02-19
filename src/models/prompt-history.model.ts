@@ -84,6 +84,7 @@ export class PromptHistoryModel extends BaseModel<PromptHistory> implements Prom
       {
         sequelize,
         ...BaseModel.initOptions('PromptHistory'),
+        tableName: 'prompt_history', // Explicitly set table name to match SQL Schema
         indexes: [
           {
             fields: ['user_id']
@@ -107,7 +108,7 @@ export class PromptHistoryModel extends BaseModel<PromptHistory> implements Prom
 import mongoose, { Schema } from 'mongoose'
 import { IBaseDocument, baseSchema } from './base.model'
 
-export interface IPromptHistoryDocument extends IBaseDocument, Omit<PromptHistory, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface IPromptHistoryDocument extends IBaseDocument, Omit<PromptHistory, 'id' | 'createdAt' | 'updatedAt'> { }
 
 const promptHistoryMongooseSchema = new Schema<IPromptHistoryDocument>({
   ...baseSchema,

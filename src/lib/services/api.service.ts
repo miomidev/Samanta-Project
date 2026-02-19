@@ -11,7 +11,7 @@ export class ApiService {
       console.warn('GEMINI_API_KEY is not set in environment variables');
     }
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
   }
 
   /**
@@ -94,7 +94,7 @@ export class ApiService {
 
       const response = result.response;
       let text = response.text();
-      
+
       // Clean up markdown code blocks if present
       text = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
@@ -102,7 +102,7 @@ export class ApiService {
       return openSpec;
     } catch (error) {
       console.error('Error generating OpenSpec (using fallback):', error);
-      
+
       // Fallback OpenSpec to allow project creation to proceed
       return {
         version: 'v1',

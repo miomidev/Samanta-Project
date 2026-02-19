@@ -58,10 +58,10 @@ Object.values(models).forEach((model: any) => {
 });
 
 // Sync database in development (optional, use migrations in production)
-if (process.env.NODE_ENV === 'development') {
-  sequelize.sync({ alter: true }).then(() => {
-    console.log('Database synced successfully');
-  }).catch(err => console.error('Sync error:', err));
-}
+// if (process.env.NODE_ENV === 'development') {
+//   sequelize.sync({ alter: true }).then(() => {
+//     console.log('Database synced successfully');
+//   }).catch(err => console.error('Sync error:', err));
+// }
 
 export { models };
