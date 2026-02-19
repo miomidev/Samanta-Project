@@ -1,6 +1,6 @@
 // config/database.ts
 export interface DatabaseConfig {
-  type: 'mysql' | 'postgresql' | 'sqlite' | 'mongodb'
+  type: 'mysql' | 'postgresql' | 'postgres' | 'sqlite' | 'mongodb'
   host: string
   port: number
   username: string

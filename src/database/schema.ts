@@ -132,8 +132,45 @@ INSERT INTO users (id, email, name, role, password) VALUES
     `
   }
 
-  static generatePostgreSQL(): string {
+  static generatePostgreSQL(adminPasswordHash: string = '$2a$10$YourHashedPasswordHere'): string {
     return `
+-- RESET DATABASE (CAUTION: This deletes all data)
+DROP SCHEMA IF EXISTS public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
+
+-- Types (Enums must be created first)
+DO $$ BEGIN
+    CREATE TYPE user_role AS ENUM ('admin', 'user', 'viewer');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE project_status AS ENUM ('draft', 'processing', 'completed', 'failed');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE prompt_status AS ENUM ('pending', 'processed', 'failed');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE notification_type AS ENUM ('info', 'success', 'warning', 'error');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE collaborator_role AS ENUM ('owner', 'editor', 'viewer');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
 -- Users table
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -147,12 +184,6 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TYPE user_role AS ENUM ('admin', 'user', 'viewer');
-CREATE TYPE project_status AS ENUM ('draft', 'processing', 'completed', 'failed');
-CREATE TYPE prompt_status AS ENUM ('pending', 'processed', 'failed');
-CREATE TYPE notification_type AS ENUM ('info', 'success', 'warning', 'error');
-CREATE TYPE collaborator_role AS ENUM ('owner', 'editor', 'viewer');
 
 -- Projects table
 CREATE TABLE projects (
@@ -192,11 +223,11 @@ CREATE INDEX idx_prompt_history_project_id ON prompt_history(project_id);
 CREATE INDEX idx_prompt_history_status ON prompt_history(status);
 CREATE INDEX idx_prompt_history_created_at ON prompt_history(created_at);
 
--- Full text search indexes
+-- Full text search indexes (Using simple to_tsvector for now)
 CREATE INDEX idx_projects_search ON projects USING GIN(to_tsvector('english', name || ' ' || COALESCE(description, '')));
 CREATE INDEX idx_prompt_history_search ON prompt_history USING GIN(to_tsvector('english', prompt));
 
--- Trigger untuk update updated_at
+-- Trigger function for updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -210,6 +241,10 @@ CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
 
 CREATE TRIGGER update_projects_updated_at BEFORE UPDATE ON projects
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Insert default admin user
+INSERT INTO users (id, email, name, role, password) VALUES 
+(gen_random_uuid(), 'developer@miomidev.com', 'Developer', 'admin', '${adminPasswordHash}');
     `
   }
 }
