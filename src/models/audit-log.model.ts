@@ -2,6 +2,7 @@
 import { DataTypes, Sequelize } from 'sequelize'
 import { AuditLog } from '../lib/types'
 import { BaseModel } from './base.model'
+import { ModelRegistry } from './index'
 
 export class AuditLogModel extends BaseModel<AuditLog> implements AuditLog {
   public userId!: string
@@ -13,7 +14,7 @@ export class AuditLogModel extends BaseModel<AuditLog> implements AuditLog {
   public ipAddress?: string
   public userAgent?: string
 
-  static associate(models: SequelizeModels) {
+  static associate(models: ModelRegistry) {
     AuditLogModel.belongsTo(models.UserModel, {
       foreignKey: 'userId',
       as: 'user'
@@ -102,7 +103,7 @@ export class AuditLogModel extends BaseModel<AuditLog> implements AuditLog {
 // Mongoose Model
 import mongoose, { Schema } from 'mongoose'
 import { IBaseDocument, baseSchema } from './base.model'
-import { SequelizeModels } from './sequelize-models'
+
 
 export interface IAuditLogDocument extends IBaseDocument, Omit<AuditLog, 'id' | 'createdAt' | 'updatedAt'> {}
 
@@ -156,4 +157,4 @@ auditLogMongooseSchema.index({ entityType: 1, entityId: 1 })
 auditLogMongooseSchema.index({ action: 1 })
 auditLogMongooseSchema.index({ createdAt: -1 })
 
-export const AuditLogMongooseModel = mongoose.model<IAuditLogDocument>('AuditLog', auditLogMongooseSchema)
+export const AuditLogMongooseModel = mongoose.models.AuditLog || mongoose.model<IAuditLogDocument>('AuditLog', auditLogMongooseSchema)

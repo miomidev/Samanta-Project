@@ -14,12 +14,12 @@ export interface DatabaseConfig {
 }
 
 export const defaultConfig: DatabaseConfig = {
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: '',
-  database: 'jadiin_db',
+  type: (process.env.DB_TYPE as any) || 'mysql',
+  host: process.env.DB_HOST || '127.0.0.1', // Default to 127.0.0.1 to avoid ipv6 issues
+  port: parseInt(process.env.DB_PORT || '3306'),
+  username: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'jadiin_db',
   pool: {
     min: 2,
     max: 10

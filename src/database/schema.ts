@@ -2,13 +2,14 @@
 
 // SQL Schema Generator untuk berbagai database
 export class SchemaGenerator {
-  static generateMySQL(): string {
+  static generateMySQL(adminPasswordHash: string = '$2a$10$YourHashedPasswordHere'): string {
     return `
 -- Users table
 CREATE TABLE users (
   id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
   email VARCHAR(255) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
   avatar TEXT,
   role ENUM('admin', 'user', 'viewer') DEFAULT 'user',
   is_active BOOLEAN DEFAULT true,
@@ -126,8 +127,8 @@ LEFT JOIN prompt_history ph ON u.id = ph.user_id
 GROUP BY u.id, u.name, u.email;
 
 -- Insert default admin user
-INSERT INTO users (id, email, name, role) VALUES 
-(UUID(), 'admin@jadiin.com', 'Admin', 'admin');
+INSERT INTO users (id, email, name, role, password) VALUES 
+(UUID(), 'admin@jadiin.com', 'Admin', 'admin', '${adminPasswordHash}'); -- Password: <provided_by_script>
     `
   }
 
@@ -138,6 +139,7 @@ CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email VARCHAR(255) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
   avatar TEXT,
   role user_role DEFAULT 'user',
   is_active BOOLEAN DEFAULT true,

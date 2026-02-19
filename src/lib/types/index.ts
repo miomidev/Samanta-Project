@@ -39,6 +39,7 @@ export interface BaseEntity {
 export interface User extends BaseEntity {
   email: string
   name: string
+  password?: string // Added password field (optional because it might not be returned in API responses)
   avatar?: string
   role: UserRole
   isActive: boolean
@@ -224,10 +225,12 @@ export interface PromptHistory extends BaseEntity {
 
 // ================= PROJECT COLLABORATOR =================
 
+export type CollaboratorRole = 'owner' | 'editor' | 'viewer'
+
 export interface ProjectCollaborator {
   projectId: string
   userId: string
-  role: 'owner' | 'editor' | 'viewer'
+  role: CollaboratorRole
   joinedAt: Date
   project?: Project
   user?: User

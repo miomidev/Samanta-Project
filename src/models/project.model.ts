@@ -2,6 +2,7 @@
 import { DataTypes, Sequelize } from 'sequelize'
 import { OpenSpec, Project, ProjectStatus } from '../lib/types'
 import { BaseModel } from './base.model'
+import { ModelRegistry } from './index'
 
 export class ProjectModel extends BaseModel<Project> implements Project {
   public name!: string
@@ -13,7 +14,7 @@ export class ProjectModel extends BaseModel<Project> implements Project {
   public repositoryUrl?: string
   public userId!: string
 
-  static associate(models: any) {
+  static associate(models: ModelRegistry) {
     ProjectModel.belongsTo(models.UserModel, {
       foreignKey: 'userId',
       as: 'user'
@@ -182,4 +183,4 @@ projectMongooseSchema.index({ status: 1 })
 projectMongooseSchema.index({ createdAt: -1 })
 projectMongooseSchema.index({ name: 'text', description: 'text' })
 
-export const ProjectMongooseModel = mongoose.model<IProjectDocument>('Project', projectMongooseSchema)
+export const ProjectMongooseModel = mongoose.models.Project || mongoose.model<IProjectDocument>('Project', projectMongooseSchema)

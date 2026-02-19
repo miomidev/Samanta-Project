@@ -2,6 +2,7 @@
 import { DataTypes, Sequelize } from 'sequelize'
 import { CollaboratorRole, ProjectCollaborator } from '../lib/types'
 import { BaseModel } from './base.model'
+import { ModelRegistry } from './index'
 
 export class ProjectCollaboratorModel extends BaseModel<ProjectCollaborator> implements ProjectCollaborator {
   public projectId!: string
@@ -9,7 +10,7 @@ export class ProjectCollaboratorModel extends BaseModel<ProjectCollaborator> imp
   public role!: CollaboratorRole
   public joinedAt!: Date
 
-  static associate(models: any) {
+  static associate(models: ModelRegistry) {
     ProjectCollaboratorModel.belongsTo(models.ProjectModel, {
       foreignKey: 'projectId',
       as: 'project'
@@ -109,7 +110,7 @@ projectCollaboratorMongooseSchema.index({ projectId: 1, userId: 1 }, { unique: t
 projectCollaboratorMongooseSchema.index({ role: 1 })
 projectCollaboratorMongooseSchema.index({ joinedAt: -1 })
 
-export const ProjectCollaboratorMongooseModel = mongoose.model<IProjectCollaboratorDocument>(
+export const ProjectCollaboratorMongooseModel = mongoose.models.ProjectCollaborator || mongoose.model<IProjectCollaboratorDocument>(
   'ProjectCollaborator', 
   projectCollaboratorMongooseSchema
 )

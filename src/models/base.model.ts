@@ -2,8 +2,8 @@
 import { DataTypes, Model } from 'sequelize'
 
 export abstract class BaseModel<
-  TAttributes extends Record<string, unknown>,
-  TCreationAttributes extends Record<string, unknown> = TAttributes
+  TAttributes extends object,
+  TCreationAttributes extends object = TAttributes
 > extends Model<TAttributes, TCreationAttributes> {
   public id!: string
   public createdAt!: Date

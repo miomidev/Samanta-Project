@@ -13,6 +13,7 @@ export class UserModel
 
   public email!: string
   public name!: string
+  public password!: string; // Added password field
   public avatar?: string
   public role!: UserRole
   public isActive!: boolean
@@ -70,6 +71,11 @@ export class UserModel
             notEmpty: true,
             len: [2, 255]
           }
+        },
+
+        password: { // Added password definition
+          type: DataTypes.STRING,
+          allowNull: false,
         },
 
         avatar: {
@@ -132,7 +138,9 @@ import { IBaseDocument, baseSchema } from './base.model'
 
 export interface IUserDocument
   extends IBaseDocument,
-  Omit<User, 'id' | 'createdAt' | 'updatedAt'> {}
+  Omit<User, 'id' | 'createdAt' | 'updatedAt'> {
+    password?: string; // Added password field interface
+  }
 
 const userMongooseSchema = new Schema<IUserDocument>(
   {
@@ -156,6 +164,12 @@ const userMongooseSchema = new Schema<IUserDocument>(
       trim: true,
       minlength: 2,
       maxlength: 255
+    },
+
+    password: { // Added password schema
+      type: String,
+      required: true,
+      select: false // Don't return password by default
     },
 
     avatar: {
@@ -185,10 +199,13 @@ const userMongooseSchema = new Schema<IUserDocument>(
     timestamps: true,
 
     toJSON: {
-      transform: (_doc, ret) => {
-        ret.id = ret._id
-        delete ret._id
+      transform: (_doc: any, ret: any) => {
+        if (ret._id) {
+          ret.id = ret._id.toString()
+          delete ret._id
+        }
         delete ret.__v
+        delete ret.password // Ensure password is removed from JSON
         return ret
       }
     }
@@ -197,12 +214,12 @@ const userMongooseSchema = new Schema<IUserDocument>(
 
 /* =============================
    Indexes
-============================= */
+================================ */
 
-userMongooseSchema.index({ email: 1 }, { unique: true })
+// userMongooseSchema.index({ email: 1 }, { unique: true }) // Removed duplicate index
 userMongooseSchema.index({ role: 1 })
 userMongooseSchema.index({ isActive: 1 })
 userMongooseSchema.index({ createdAt: -1 })
 
 export const UserMongooseModel =
-  mongoose.model<IUserDocument>('User', userMongooseSchema)
+  mongoose.models.User || mongoose.model<IUserDocument>('User', userMongooseSchema)

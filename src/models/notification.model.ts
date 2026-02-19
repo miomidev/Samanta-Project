@@ -1,6 +1,7 @@
 import { DataTypes, Sequelize } from 'sequelize'
 import { Notification, NotificationType } from '../lib/types'
 import { BaseModel } from './base.model'
+import { ModelRegistry } from './index'
 
 export class NotificationModel
   extends BaseModel<Notification>
@@ -15,7 +16,7 @@ export class NotificationModel
   public readAt?: Date
   public actionUrl?: string
 
-  static associate(models: any) {
+  static associate(models: ModelRegistry) {
     NotificationModel.belongsTo(models.UserModel, {
       foreignKey: 'userId',
       as: 'user'

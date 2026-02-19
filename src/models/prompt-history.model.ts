@@ -2,6 +2,7 @@
 import { DataTypes, Sequelize } from 'sequelize'
 import { OpenSpec, PromptHistory, PromptStatus } from '../lib/types'
 import { BaseModel } from './base.model'
+import { ModelRegistry } from './index'
 
 export class PromptHistoryModel extends BaseModel<PromptHistory> implements PromptHistory {
   public prompt!: string
@@ -12,7 +13,7 @@ export class PromptHistoryModel extends BaseModel<PromptHistory> implements Prom
   public tokensUsed?: number
   public processingTime?: number
 
-  static associate(models: any) {
+  static associate(models: ModelRegistry) {
     PromptHistoryModel.belongsTo(models.UserModel, {
       foreignKey: 'userId',
       as: 'user'
@@ -154,4 +155,4 @@ promptHistoryMongooseSchema.index({ projectId: 1 })
 promptHistoryMongooseSchema.index({ status: 1 })
 promptHistoryMongooseSchema.index({ createdAt: -1 })
 
-export const PromptHistoryMongooseModel = mongoose.model<IPromptHistoryDocument>('PromptHistory', promptHistoryMongooseSchema)
+export const PromptHistoryMongooseModel = mongoose.models.PromptHistory || mongoose.model<IPromptHistoryDocument>('PromptHistory', promptHistoryMongooseSchema)

@@ -1,49 +1,23 @@
-import {
-    DataTypes,
-    InitOptions,
-    Model,
-    ModelAttributes
-} from 'sequelize'
+export * from './base.model'
+export * from './user.model'
+export * from './project.model'
+export * from './project-collaborator.model'
+export * from './prompt-history.model'
+export * from './notification.model'
+export * from './audit-log.model'
 
-export abstract class BaseModel<
-  TAttributes extends object,
-  TCreationAttributes extends object = TAttributes
-> extends Model<TAttributes, TCreationAttributes> {
+import { UserModel } from './user.model'
+import { ProjectModel } from './project.model'
+import { ProjectCollaboratorModel } from './project-collaborator.model'
+import { PromptHistoryModel } from './prompt-history.model'
+import { NotificationModel } from './notification.model'
+import { AuditLogModel } from './audit-log.model'
 
-  public id!: string
-  public createdAt!: Date
-  public updatedAt!: Date
-
-  static initAttributes: ModelAttributes = {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
-    },
-
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-      field: 'created_at'
-    },
-
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-      field: 'updated_at'
-    }
-  }
-
-  static initOptions(modelName: string): Partial<InitOptions> {
-    return {
-      modelName,
-      timestamps: true,
-      underscored: true,
-      freezeTableName: false,
-      charset: 'utf8mb4',
-      collate: 'utf8mb4_unicode_ci'
-    }
-  }
+export interface ModelRegistry {
+  UserModel: typeof UserModel
+  ProjectModel: typeof ProjectModel
+  ProjectCollaboratorModel: typeof ProjectCollaboratorModel
+  PromptHistoryModel: typeof PromptHistoryModel
+  NotificationModel: typeof NotificationModel
+  AuditLogModel: typeof AuditLogModel
 }
