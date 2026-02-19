@@ -17,7 +17,7 @@ export const sequelize = globalForSequelize.sequelize || new Sequelize(
   {
     host: defaultConfig.host,
     port: defaultConfig.port,
-    dialect: 'mysql', // Explicitly set dialect
+    dialect: (defaultConfig.type === 'postgresql' || defaultConfig.type === 'postgres') ? 'postgres' : 'mysql',
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
     pool: defaultConfig.pool,
     dialectOptions: {
