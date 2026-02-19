@@ -111,7 +111,7 @@ export class ProjectModel extends BaseModel<Project> implements Project {
           },
           {
             name: 'project_search_idx',
-            fields: ['name', 'description']
+            fields: ['name']
           }
         ]
       }

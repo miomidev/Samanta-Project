@@ -25,21 +25,11 @@ export async function createProjectAction(prevState: any, formData: FormData) {
     const userId = await getUserId();
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
+    const databaseType = (formData.get('database_type') as string) || 'mysql';
 
-    if (!name) return { error: 'Name is required' };
+    if (!name) return { error: 'Name is required', success: false };
 
-    // Use a simple create method for now (not the complex AI generation one unless requested)
-    // Wait, projectService has createProjectFromPrompt which does AI.
-    // Let's implement a simple create for CRUD first, or use the prompt one?
-    // User request: "crud". Usually implies basic data entry. 
-    // But `projectService` seems geared towards AI.
-    // Let's assume description IS the prompt for now, or use a basic create.
-    // projectService doesn't have a simple `create` method exposed clearly other than `createProjectFromPrompt`.
-    // Let's add a `createProject` to `projectService` or just use `createProjectFromPrompt`?
-    // `createProjectFromPrompt` is core to this app ("Samanta"). So I should use it!
-    // It takes (userId, prompt, name). description -> prompt.
-    
-    await projectService.createProjectFromPrompt(userId, description, name);
+    await projectService.createProjectFromPrompt(userId, description, name, databaseType);
 
     revalidatePath('/dashboard');
     return { success: true, error: '' };

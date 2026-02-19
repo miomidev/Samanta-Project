@@ -19,10 +19,15 @@ export class ApiService {
    * @param prompt User's description of the project
    * @returns OpenSpec object
    */
-  async generateOpenSpec(prompt: string): Promise<OpenSpec> {
+  async generateOpenSpec(prompt: string, options?: { databaseType?: string }): Promise<OpenSpec> {
+    const dbType = options?.databaseType || 'mysql';
     try {
       const systemPrompt = `
         You are an expert software architect. converting user descriptions into a structured project specification (OpenSpec).
+        
+        Requirements:
+        1. Target Database: ${dbType}
+        2. Analyze the user's feature list carefully.
         
         The OpenSpec structure must follow this interface exactly:
         

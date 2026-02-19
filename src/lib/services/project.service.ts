@@ -11,14 +11,14 @@ export class ProjectService {
    * 2. Save the prompt history
    * 3. Create the Project record with the generated OpenSpec
    */
-  async createProjectFromPrompt(userId: string, prompt: string, projectName: string): Promise<ProjectModel> {
+  async createProjectFromPrompt(userId: string, prompt: string, projectName: string, databaseType: string = 'mysql'): Promise<ProjectModel> {
     const startTime = Date.now();
     let openSpec: OpenSpec;
     let status: ProjectStatus = 'draft';
     
     try {
       // 1. Generate Spec
-      openSpec = await apiService.generateOpenSpec(prompt);
+      openSpec = await apiService.generateOpenSpec(prompt, { databaseType });
       
       // Auto-correct project name in spec if needed or use the one provided
       if (openSpec.project) {
